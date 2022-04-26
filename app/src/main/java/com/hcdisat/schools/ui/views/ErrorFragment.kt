@@ -41,10 +41,6 @@ class ErrorFragment : DialogFragment() {
         binding.errorMessage.text = errorMessage
     }
 
-    fun show() {
-        show(childFragmentManager, TAG)
-    }
-
     companion object {
 
         const val TAG = "ErrorFragment"
