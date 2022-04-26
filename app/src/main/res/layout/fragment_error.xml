@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minHeight="350dp"
+    android:elevation="20dp"
+    app:cardCornerRadius="10dp"
+    tools:layout_margin="16dp"
+    android:backgroundTint="@color/primary_error"
+    tools:context=".ui.views.ErrorFragment">
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close"
+        style="@style/Widget.AppCompat.ActionButton.CloseMode"
+        app:tint="@color/white"
+        android:layout_gravity="end"
+        android:layout_marginBottom="16dp"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/error_message_text"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:padding="32dp"
+        app:drawableStartCompat="@drawable/ic_error"
+        app:drawableTint="@color/white"
+        android:drawablePadding="24dp"/>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Schools</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="home_fragment_label">Home</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!--school_data-->
+    <string name="dbn">DBN6636</string>
+    <string name="school_name">Rowan School</string>
+    <string name="school_sport">BasketBall</string>
+    <string name="school_students">650</string>
+    <string name="total_students">Total Students</string>
+    <string name="sports">Sports</string>
+    <string name="school_name_text">Name</string>
+    <string name="no_sports">No Sports</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="error_message_text">:( Something went wrong, please contact support!</string>
+    <string name="btn_retry">Retry</string>
+    <string name="dbn_text">DBN</string>
+    <string name="num_of_sat_test_takers_test">Test takers</string>
+    <string name="num_of_sat_test_takers">696</string>
+    <string name="sat_critical_reading_avg_score_text">Critical reading avg score</string>
+    <string name="sat_math_avg_score_text">Math avg score</string>
+    <string name="sat_writing_avg_score_test">Writing avg score</string>
+</resources>
