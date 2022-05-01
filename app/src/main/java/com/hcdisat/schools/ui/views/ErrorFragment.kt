@@ -9,6 +9,8 @@ import com.hcdisat.schools.databinding.FragmentErrorBinding
 
 class ErrorFragment : DialogFragment() {
 
+    var onClosing: () -> Unit = {}
+
     private var _binding: FragmentErrorBinding? = null
     private val binding: FragmentErrorBinding get() = _binding!!
 
@@ -37,7 +39,10 @@ class ErrorFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnClose.setOnClickListener { dismissAllowingStateLoss() }
+        binding.btnClose.setOnClickListener {
+            dismissAllowingStateLoss()
+            onClosing()
+        }
         binding.errorMessage.text = errorMessage
     }
 

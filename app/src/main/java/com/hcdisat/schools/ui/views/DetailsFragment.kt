@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.hcdisat.schools.databinding.FragmentDetailsBinding
 import com.hcdisat.schools.models.SchoolDetails
-import com.hcdisat.schools.ui.viewmodels.SchoolResults
+import com.hcdisat.schools.ui.state.RequestState
+import com.hcdisat.schools.ui.state.RequestState.*
 import com.hcdisat.schools.ui.viewmodels.SchoolsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +19,7 @@ class DetailsFragment : DialogFragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SchoolsViewModel by activityViewModels()
+    private val viewModel: SchoolsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,18 +27,25 @@ class DetailsFragment : DialogFragment() {
     ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         binding.btnClose.setOnClickListener { dismissAllowingStateLoss() }
-
         viewModel.schoolDetails.observe(viewLifecycleOwner, ::handleDetails)
-
         return binding.root
     }
 
-    private fun handleDetails(schoolResults: SchoolResults) {
-        when (schoolResults) {
-            is SchoolResults.ERROR -> errorHandler(schoolResults)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        arguments?.let { bundle ->
+            bundle.getString(DBN_KEY)?.let {
+                viewModel.getSchoolDetails(it)
+            }
+        }
+    }
 
-            is SchoolResults.LOADING -> shouldDisplayContent(false)
-            is SchoolResults.SUCCESS<*> -> {
+    private fun handleDetails(schoolResults: RequestState) {
+        when (schoolResults) {
+            is ERROR -> errorHandler(schoolResults)
+
+            is LOADING -> shouldDisplayContent(false)
+            is SUCCESS<*> -> {
                 val details = schoolResults.results as SchoolDetails
                 with(binding) {
                     schoolName.text = details.schoolName
@@ -52,10 +60,14 @@ class DetailsFragment : DialogFragment() {
         }
     }
 
-    private fun errorHandler(schoolResults: SchoolResults.ERROR) {
+    private fun errorHandler(schoolResults: ERROR) {
         val dialog = ErrorFragment.showError(
             "Error: ${schoolResults.throwable.localizedMessage}"
-        ).show(childFragmentManager, ErrorFragment.TAG)
+        )
+        dialog.show(childFragmentManager, ErrorFragment.TAG)
+        dialog.onClosing = {
+            dismissAllowingStateLoss()
+        }
     }
 
     private fun shouldDisplayContent(yes: Boolean) {
@@ -71,13 +83,9 @@ class DetailsFragment : DialogFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getSchoolDetails()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setStyle(
             STYLE_NORMAL,
             android.R.style.Theme_Material_Light_NoActionBar_Fullscreen
@@ -98,8 +106,13 @@ class DetailsFragment : DialogFragment() {
 
     companion object {
         const val TAG = "DetailsFragment"
+        private const val DBN_KEY = "DBN_KEY"
 
         @JvmStatic
-        fun newDetailsFragment() = DetailsFragment()
+        fun newDetailsFragment(dbn: String) = DetailsFragment().apply {
+            arguments = Bundle().apply {
+                putString(DBN_KEY, dbn)
+            }
+        }
     }
 }

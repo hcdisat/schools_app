@@ -11,7 +11,7 @@ interface IDbRepository {
     suspend fun saveSchoolDetails(schoolsDetails: List<SchoolDetails>)
 }
 
-class DbRepository @Inject constructor(private val schoolDao: SchoolDao): IDbRepository {
+class DbRepository @Inject constructor(private val schoolDao: SchoolDao) : IDbRepository {
     override suspend fun allSchools(): List<School> = schoolDao.allSchools()
 
     override suspend fun details(dbn: String): SchoolDetails? = schoolDao.details(dbn)

@@ -9,7 +9,8 @@ import androidx.fragment.app.activityViewModels
 import com.hcdisat.schools.databinding.FragmentHomeBinding
 import com.hcdisat.schools.models.School
 import com.hcdisat.schools.ui.adapters.SchoolsAdapter
-import com.hcdisat.schools.ui.viewmodels.SchoolResults
+import com.hcdisat.schools.ui.state.RequestState
+import com.hcdisat.schools.ui.state.RequestState.*
 import com.hcdisat.schools.ui.viewmodels.SchoolsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,8 +21,7 @@ class HomeFragment : Fragment() {
 
     private val schoolAdapter by lazy {
         SchoolsAdapter() {
-            viewModel.selectedDbn(it)
-            DetailsFragment.newDetailsFragment()
+            DetailsFragment.newDetailsFragment(it)
                 .show(childFragmentManager, DetailsFragment.TAG)
         }
     }
@@ -34,22 +34,13 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        viewModel.schoolData.observe(viewLifecycleOwner, ::handleResults)
-
+        binding.schoolList.apply { adapter = schoolAdapter }
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getSchools()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.schoolList.apply { adapter = schoolAdapter }
-        binding.btnRetry.setOnClickListener { viewModel.getSchools() }
+        viewModel.schoolData.observe(viewLifecycleOwner, ::handleResults)
     }
 
     override fun onDestroyView() {
@@ -57,16 +48,16 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun handleResults(schoolResults: SchoolResults) {
+    private fun handleResults(schoolResults: RequestState) {
         when (schoolResults) {
-            is SchoolResults.LOADING -> shouldDisplayData(false)
-            is SchoolResults.ERROR -> {
+            is LOADING -> shouldDisplayData(false)
+            is ERROR -> {
                 ErrorFragment.showError(
                     "Error ${schoolResults.throwable.localizedMessage}"
                 ).show(childFragmentManager, ErrorFragment.TAG)
                 binding.btnRetry.visibility = View.VISIBLE
             }
-            is SchoolResults.SUCCESS<*> ->
+            is SUCCESS<*> ->
                 schoolAdapter.setSchools(
                     (schoolResults.results as List<*>).filterIsInstance<School>()
                 ).also {

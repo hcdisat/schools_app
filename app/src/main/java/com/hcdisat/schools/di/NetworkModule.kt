@@ -1,9 +1,9 @@
 package com.hcdisat.schools.di
 
-import com.hcdisat.schools.dataaccess.database.IDbRepository
 import com.hcdisat.schools.dataaccess.network.ISchoolApiRepository
 import com.hcdisat.schools.dataaccess.network.SchoolApi
 import com.hcdisat.schools.dataaccess.network.SchoolApiRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,10 +40,15 @@ class NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(SchoolApi::class.java)
+}
 
-    @Provides
-    fun providesSchoolApiRepository(schoolApi: SchoolApi, dbRepository: IDbRepository): ISchoolApiRepository =
-        SchoolApiRepository(schoolApi, dbRepository)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+   abstract fun providesSchoolApiRepository(impl: SchoolApiRepository): ISchoolApiRepository
 }
 
 private const val REQUEST_TIMEOUT = 30L
