@@ -10,7 +10,7 @@ import com.hcdisat.schools.databinding.FragmentDetailsBinding
 import com.hcdisat.schools.models.SchoolDetails
 import com.hcdisat.schools.ui.state.RequestState
 import com.hcdisat.schools.ui.state.RequestState.*
-import com.hcdisat.schools.ui.viewmodels.SchoolsViewModel
+import com.hcdisat.schools.ui.schoollist.SchoolsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,7 +44,7 @@ class DetailsFragment : DialogFragment() {
         when (schoolResults) {
             is ERROR -> errorHandler(schoolResults)
 
-            is LOADING -> shouldDisplayContent(false)
+            is INITIAL -> shouldDisplayContent(false)
             is SUCCESS<*> -> {
                 val details = schoolResults.results as SchoolDetails
                 with(binding) {

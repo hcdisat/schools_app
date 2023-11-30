@@ -3,6 +3,7 @@ package com.hcdisat.schools.ui.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.hcdisat.schools.dataaccess.network.ISchoolApiRepository
+import com.hcdisat.schools.ui.schoollist.SchoolsViewModel
 import com.hcdisat.schools.ui.state.RequestState
 import com.hcdisat.schools.ui.state.RequestState.*
 import io.mockk.clearAllMocks
@@ -45,11 +46,11 @@ class SchoolsViewModelTest {
     @Test
     fun `schoolData must be in a loading state`() = runTest {
         coEvery { schoolRepo.schoolRequestState } returns
-            MutableStateFlow(LOADING)
+            MutableStateFlow(INITIAL)
         schoolsViewModel = SchoolsViewModel(schoolRepo)
 
         schoolsViewModel.schoolData.observeForever {
-            assertThat(it).isInstanceOf(LOADING::class.java)
+            assertThat(it).isInstanceOf(INITIAL::class.java)
         }
     }
 
@@ -71,7 +72,7 @@ class SchoolsViewModelTest {
         schoolsViewModel = SchoolsViewModel(schoolRepo)
 
         schoolsViewModel.schoolDetails.observeForever {
-            assertThat(it).isInstanceOf(LOADING::class.java)
+            assertThat(it).isInstanceOf(INITIAL::class.java)
         }
     }
 

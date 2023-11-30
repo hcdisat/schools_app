@@ -50,10 +50,10 @@ class SchoolApiRepositoryTest {
     fun `schoolRequestState StateFlow must be in a SUCCESS state`() {
 
         assertThat(schoolsRepo.schoolRequestState.value)
-            .isInstanceOf(LOADING::class.java)
+            .isInstanceOf(INITIAL::class.java)
 
         assertThat(schoolsRepo.detailsRequestState.value)
-            .isInstanceOf(LOADING::class.java)
+            .isInstanceOf(INITIAL::class.java)
     }
 
     @Test
@@ -146,7 +146,7 @@ class SchoolApiRepositoryTest {
             schoolsRepo.getSchoolDetails(dbn)
 
             assertThat(schoolsRepo.detailsRequestState.value)
-                .isInstanceOf(LOADING::class.java)
+                .isInstanceOf(INITIAL::class.java)
         }
 
     @Test
